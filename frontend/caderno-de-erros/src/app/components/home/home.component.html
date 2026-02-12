@@ -1,0 +1,56 @@
+<div class="home-container">
+  <div class="hero">
+    <h1>📚 Caderno de Erros</h1>
+    <p class="subtitle">Organize seus erros e transforme-os em aprendizado</p>
+  </div>
+
+  <div class="features">
+    <div class="feature-card">
+      <div class="feature-icon">📖</div>
+      <h2>Organize por Matérias</h2>
+      <p>Crie e gerencie suas matérias de estudo de forma organizada</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">📝</div>
+      <h2>Divida em Assuntos</h2>
+      <p>Separe cada matéria em assuntos específicos para melhor controle</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">❌</div>
+      <h2>Registre seus Erros</h2>
+      <p>Anote questões erradas com explicações detalhadas</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">✅</div>
+      <h2>Revise e Aprenda</h2>
+      <p>Marque erros como revisados e acompanhe seu progresso</p>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-primary btn-large" (click)="navegarPara('/materias')">
+      Começar Agora
+    </button>
+  </div>
+
+  <div class="quick-links">
+    <h3>Acesso Rápido</h3>
+    <div class="links-grid">
+      <button class="link-card" (click)="navegarPara('/materias')">
+        <span class="link-icon">📚</span>
+        <span>Matérias</span>
+      </button>
+      <button class="link-card" (click)="navegarPara('/assuntos')">
+        <span class="link-icon">📝</span>
+        <span>Assuntos</span>
+      </button>
+      <button class="link-card" (click)="navegarPara('/erros')">
+        <span class="link-icon">❌</span>
+        <span>Todos os Erros</span>
+      </button>
+    </div>
+  </div>
+</div>

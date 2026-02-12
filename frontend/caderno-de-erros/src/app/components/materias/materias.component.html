@@ -1,0 +1,55 @@
+<div class="container">
+  <h1>Minhas Matérias</h1>
+
+  <!-- Formulário para criar nova matéria -->
+  <div class="form-container">
+    <h2>Nova Matéria</h2>
+    <form (ngSubmit)="criarMateria()">
+      <div class="form-group">
+        <input
+          type="text"
+          [(ngModel)]="novaMateria.nome"
+          name="nome"
+          placeholder="Nome da matéria"
+          class="form-control"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        {{ loading ? 'Salvando...' : 'Criar Matéria' }}
+      </button>
+    </form>
+  </div>
+
+  <!-- Mensagem de erro -->
+  <div *ngIf="error" class="alert alert-error">
+    {{ error }}
+  </div>
+
+  <!-- Lista de matérias -->
+  <div class="materias-list">
+    <h2>Todas as Matérias</h2>
+    <div *ngIf="loading && materias.length === 0" class="loading">
+      Carregando...
+    </div>
+    
+    <div *ngIf="!loading && materias.length === 0" class="empty">
+      Nenhuma matéria cadastrada ainda.
+    </div>
+
+    <div class="materia-card" *ngFor="let materia of materias">
+      <div class="materia-header">
+        <h3>{{ materia.nome }}</h3>
+        <span class="badge">{{ materia.quantidadeAssuntos }} assunto(s)</span>
+      </div>
+      <div class="materia-footer">
+        <button class="btn btn-secondary" (click)="verAssuntos(materia.id)">
+          Ver Assuntos
+        </button>
+        <button class="btn btn-danger" (click)="excluirMateria(materia.id)">
+          Excluir
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

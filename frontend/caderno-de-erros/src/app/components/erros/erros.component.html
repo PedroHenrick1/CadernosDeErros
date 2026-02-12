@@ -1,0 +1,173 @@
+<div class="container">
+  <div class="header">
+    <button class="btn btn-back" (click)="voltarParaAssuntos()">← Voltar para Assuntos</button>
+    <h1 *ngIf="assunto">Erros de {{ assunto.nome }}</h1>
+    <h1 *ngIf="!assunto">Todos os Erros</h1>
+  </div>
+
+  <!-- Botão para mostrar/esconder formulário -->
+  <button class="btn btn-primary btn-toggle" (click)="toggleFormulario()">
+    {{ mostrarFormulario ? '✕ Fechar Formulário' : '+ Adicionar Novo Erro' }}
+  </button>
+
+  <!-- Formulário para criar novo erro -->
+  <div class="form-container" *ngIf="mostrarFormulario">
+    <h2>Novo Erro</h2>
+    <form (ngSubmit)="criarErro()">
+      <div class="form-group">
+        <label>Questão *</label>
+        <textarea
+          [(ngModel)]="novoErro.questao"
+          name="questao"
+          placeholder="Descreva a questão..."
+          class="form-control"
+          rows="3"
+          required
+        ></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Minha Resposta</label>
+          <input
+            type="text"
+            [(ngModel)]="novoErro.minhaResposta"
+            name="minhaResposta"
+            placeholder="Sua resposta..."
+            class="form-control"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Resposta Correta</label>
+          <input
+            type="text"
+            [(ngModel)]="novoErro.respostaCorreta"
+            name="respostaCorreta"
+            placeholder="Resposta correta..."
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Explicação</label>
+        <textarea
+          [(ngModel)]="novoErro.explicacao"
+          name="explicacao"
+          placeholder="Por que errei? O que aprendi?"
+          class="form-control"
+          rows="3"
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Observações</label>
+        <textarea
+          [(ngModel)]="novoErro.observacoes"
+          name="observacoes"
+          placeholder="Observações adicionais..."
+          class="form-control"
+          rows="2"
+        ></textarea>
+      </div>
+
+      <div class="form-group" *ngIf="!assuntoId">
+        <label>Assunto *</label>
+        <select
+          [(ngModel)]="novoErro.assuntoId"
+          name="assuntoId"
+          class="form-control"
+          required
+        >
+          <option value="0">Selecione um assunto</option>
+          <option *ngFor="let a of assuntos" [value]="a.id">
+            {{ a.nomeMateria }} - {{ a.nome }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="loading">
+          {{ loading ? 'Salvando...' : 'Salvar Erro' }}
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="resetarFormulario()">
+          Limpar
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Mensagem de erro -->
+  <div *ngIf="error" class="alert alert-error">
+    {{ error }}
+  </div>
+
+  <!-- Lista de erros -->
+  <div class="erros-list">
+    <h2>{{ assuntoId ? 'Erros deste Assunto' : 'Todos os Erros' }}</h2>
+    <div *ngIf="loading && erros.length === 0" class="loading">
+      Carregando...
+    </div>
+    
+    <div *ngIf="!loading && erros.length === 0" class="empty">
+      Nenhum erro cadastrado ainda. Comece adicionando seus primeiros erros!
+    </div>
+
+    <div class="erro-card" *ngFor="let erro of erros" [class.revisado]="erro.revisado">
+      <div class="erro-header">
+        <div class="erro-info">
+          <span class="materia-tag">{{ erro.nomeMateria }}</span>
+          <span class="assunto-tag">{{ erro.nomeAssunto }}</span>
+        </div>
+        <div class="erro-status">
+          <span class="data">{{ formatarData(erro.dataErro) }}</span>
+          <span class="badge-status" [class.badge-revisado]="erro.revisado">
+            {{ erro.revisado ? '✓ Revisado' : 'Não Revisado' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="erro-content">
+        <div class="questao">
+          <strong>Questão:</strong>
+          <p>{{ erro.questao }}</p>
+        </div>
+
+        <div class="respostas" *ngIf="erro.minhaResposta || erro.respostaCorreta">
+          <div class="resposta-item" *ngIf="erro.minhaResposta">
+            <strong>Minha Resposta:</strong>
+            <p class="resposta-errada">{{ erro.minhaResposta }}</p>
+          </div>
+          <div class="resposta-item" *ngIf="erro.respostaCorreta">
+            <strong>Resposta Correta:</strong>
+            <p class="resposta-correta">{{ erro.respostaCorreta }}</p>
+          </div>
+        </div>
+
+        <div class="explicacao" *ngIf="erro.explicacao">
+          <strong>Explicação:</strong>
+          <p>{{ erro.explicacao }}</p>
+        </div>
+
+        <div class="observacoes" *ngIf="erro.observacoes">
+          <strong>Observações:</strong>
+          <p>{{ erro.observacoes }}</p>
+        </div>
+      </div>
+
+      <div class="erro-footer">
+        <button 
+          class="btn btn-success" 
+          (click)="marcarRevisado(erro)"
+          *ngIf="!erro.revisado"
+        >
+          ✓ Marcar como Revisado
+        </button>
+        <button class="btn btn-danger" (click)="excluirErro(erro.id)">
+          Excluir
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

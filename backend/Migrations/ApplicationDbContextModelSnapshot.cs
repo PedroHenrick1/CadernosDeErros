@@ -33,9 +33,6 @@ namespace CadernosDeErros.Migrations
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Descricao")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("MateriaId")
                         .HasColumnType("int");
 
@@ -68,6 +65,9 @@ namespace CadernosDeErros.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Explicacao")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MinhaResposta")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Observacoes")

@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public string Questao { get; set; } = string.Empty;
         public string? RespostaCorreta { get; set; }
+        public string? MinhaResposta { get; set; }
         public string? Explicacao { get; set; }
         public string? Observacoes { get; set; }
         public int AssuntoId { get; set; }

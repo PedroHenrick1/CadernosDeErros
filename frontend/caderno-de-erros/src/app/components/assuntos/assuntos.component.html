@@ -1,0 +1,73 @@
+<div class="container">
+  <div class="header">
+    <button class="btn btn-back" (click)="voltarParaMaterias()">← Voltar para Matérias</button>
+    <h1 *ngIf="materia">Assuntos de {{ materia.nome }}</h1>
+    <h1 *ngIf="!materia">Todos os Assuntos</h1>
+  </div>
+
+  <!-- Formulário para criar novo assunto -->
+  <div class="form-container">
+    <h2>Novo Assunto</h2>
+    <form (ngSubmit)="criarAssunto()">
+      <div class="form-group">
+        <input
+          type="text"
+          [(ngModel)]="novoAssunto.nome"
+          name="nome"
+          placeholder="Nome do assunto"
+          class="form-control"
+          required
+        />
+      </div>
+      <div class="form-group" *ngIf="!materiaId">
+        <select
+          [(ngModel)]="novoAssunto.materiaId"
+          name="materiaId"
+          class="form-control"
+          required
+        >
+          <option value="0">Selecione uma matéria</option>
+          <option *ngFor="let m of materias" [value]="m.id">{{ m.nome }}</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        {{ loading ? 'Salvando...' : 'Criar Assunto' }}
+      </button>
+    </form>
+  </div>
+
+  <!-- Mensagem de erro -->
+  <div *ngIf="error" class="alert alert-error">
+    {{ error }}
+  </div>
+
+  <!-- Lista de assuntos -->
+  <div class="assuntos-list">
+    <h2>{{ materiaId ? 'Assuntos desta Matéria' : 'Todos os Assuntos' }}</h2>
+    <div *ngIf="loading && assuntos.length === 0" class="loading">
+      Carregando...
+    </div>
+    
+    <div *ngIf="!loading && assuntos.length === 0" class="empty">
+      Nenhum assunto cadastrado ainda.
+    </div>
+
+    <div class="assunto-card" *ngFor="let assunto of assuntos">
+      <div class="assunto-header">
+        <div>
+          <h3>{{ assunto.nome }}</h3>
+          <p class="materia-name" *ngIf="!materiaId">{{ assunto.nomeMateria }}</p>
+        </div>
+        <span class="badge">{{ assunto.quantidadeErros }} erro(s)</span>
+      </div>
+      <div class="assunto-footer">
+        <button class="btn btn-secondary" (click)="verErros(assunto.id)">
+          Ver Erros
+        </button>
+        <button class="btn btn-danger" (click)="excluirAssunto(assunto.id)">
+          Excluir
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

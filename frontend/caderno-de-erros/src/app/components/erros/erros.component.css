@@ -1,0 +1,309 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.btn-back {
+  background-color: #6c757d;
+  color: white;
+  margin-bottom: 15px;
+}
+
+.btn-back:hover {
+  background-color: #545b62;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+h2 {
+  color: #555;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.btn-toggle {
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.form-container {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #555;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  font-family: inherit;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+textarea.form-control {
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #545b62;
+}
+
+.btn-success {
+  background-color: #28a745;
+  color: white;
+  margin-right: 10px;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+.alert {
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.alert-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.erros-list {
+  margin-top: 30px;
+}
+
+.loading, .empty {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 18px;
+}
+
+.erro-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-left: 4px solid #dc3545;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: box-shadow 0.3s;
+}
+
+.erro-card.revisado {
+  border-left-color: #28a745;
+  opacity: 0.85;
+}
+
+.erro-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.erro-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.erro-info {
+  display: flex;
+  gap: 10px;
+}
+
+.materia-tag, .assunto-tag {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+.materia-tag {
+  background-color: #007bff;
+  color: white;
+}
+
+.assunto-tag {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.erro-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.data {
+  color: #666;
+  font-size: 14px;
+}
+
+.badge-status {
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  background-color: #ffc107;
+  color: #333;
+}
+
+.badge-status.badge-revisado {
+  background-color: #28a745;
+  color: white;
+}
+
+.erro-content {
+  margin: 15px 0;
+}
+
+.questao, .respostas, .explicacao, .observacoes {
+  margin-bottom: 15px;
+}
+
+.questao p, .explicacao p, .observacoes p {
+  margin: 5px 0 0 0;
+  color: #333;
+  line-height: 1.6;
+}
+
+.respostas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.resposta-item {
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.resposta-item strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.resposta-errada {
+  background-color: #ffe6e6;
+  padding: 8px;
+  border-radius: 4px;
+  margin: 5px 0 0 0;
+  color: #721c24;
+}
+
+.resposta-correta {
+  background-color: #d4edda;
+  padding: 8px;
+  border-radius: 4px;
+  margin: 5px 0 0 0;
+  color: #155724;
+}
+
+.erro-footer {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+@media (max-width: 768px) {
+  .form-row, .respostas {
+    grid-template-columns: 1fr;
+  }
+  
+  .erro-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}

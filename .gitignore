@@ -17,3 +17,8 @@ ScaffoldingReadMe.txt
 # Others
 *.log
 *.vs/
+
+# Angular
+node_modules/
+dist/
+.angular/

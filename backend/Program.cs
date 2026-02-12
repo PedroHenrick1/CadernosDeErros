@@ -10,12 +10,24 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Configurar CORS para permitir requisiÃ§Ãµes do frontend
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
-// Criar banco de dados , caso ele não exista
+// Criar banco de dados , caso ele nï¿½o exista
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -24,8 +36,8 @@ using (var scope = app.Services.CreateScope())
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
 
-        // Se o banco não existe, ele cria.
-        // Se existe mas está desatualizado, ele aplica as migrations pendentes.
+        // Se o banco nï¿½o existe, ele cria.
+        // Se existe mas estï¿½ desatualizado, ele aplica as migrations pendentes.
         context.Database.Migrate();
     }
     catch (Exception ex)
@@ -45,6 +57,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAngularApp");
 
 app.UseAuthorization();
 
