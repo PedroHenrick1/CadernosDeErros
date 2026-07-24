@@ -40,9 +40,14 @@ namespace CadernosDeErros.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("MateriaId");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Assuntos");
                 });
@@ -83,9 +88,14 @@ namespace CadernosDeErros.Migrations
                     b.Property<bool>("Revisado")
                         .HasColumnType("bit");
 
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AssuntoId");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Erros");
                 });
@@ -105,9 +115,47 @@ namespace CadernosDeErros.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("UsuarioId");
+
                     b.ToTable("Materias");
+                });
+
+            modelBuilder.Entity("CadernosDeErros.Entities.Usuario", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("SenhaHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Usuarios");
                 });
 
             modelBuilder.Entity("CadernosDeErros.Entities.Assunto", b =>
@@ -118,7 +166,15 @@ namespace CadernosDeErros.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CadernosDeErros.Entities.Usuario", "Usuario")
+                        .WithMany("Assuntos")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Materia");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("CadernosDeErros.Entities.Erro", b =>
@@ -129,7 +185,26 @@ namespace CadernosDeErros.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("CadernosDeErros.Entities.Usuario", "Usuario")
+                        .WithMany("Erros")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Assunto");
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("CadernosDeErros.Entities.Materia", b =>
+                {
+                    b.HasOne("CadernosDeErros.Entities.Usuario", "Usuario")
+                        .WithMany("Materias")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("CadernosDeErros.Entities.Assunto", b =>
@@ -140,6 +215,15 @@ namespace CadernosDeErros.Migrations
             modelBuilder.Entity("CadernosDeErros.Entities.Materia", b =>
                 {
                     b.Navigation("Assuntos");
+                });
+
+            modelBuilder.Entity("CadernosDeErros.Entities.Usuario", b =>
+                {
+                    b.Navigation("Assuntos");
+
+                    b.Navigation("Erros");
+
+                    b.Navigation("Materias");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,101 +1,159 @@
 <div class="container">
-  <div class="header">
-    <button class="btn btn-back" (click)="voltarParaAssuntos()">← Voltar para Assuntos</button>
-    <h1 *ngIf="assunto">Erros de {{ assunto.nome }}</h1>
-    <h1 *ngIf="!assunto">Todos os Erros</h1>
+  <div class="header-action">
+    <button *ngIf="assuntoId" class="btn btn-secondary" (click)="voltarParaAssuntos()">
+      ← Voltar para Assuntos
+    </button>
+    <h1>{{ assunto ? 'Erros em ' + assunto.nome : 'Todos os Erros Cadastrados' }}</h1>
   </div>
 
-  <!-- Botão para mostrar/esconder formulário -->
-  <button class="btn btn-primary btn-toggle" (click)="toggleFormulario()">
-    {{ mostrarFormulario ? '✕ Fechar Formulário' : '+ Adicionar Novo Erro' }}
-  </button>
+  <!-- Painel de Diagnóstico & Retenção de Estudo ("Laboratório do Concurseiro") -->
+  <div class="retencao-dashboard" *ngIf="totalErrosCount > 0">
+    <div class="retencao-header">
+      <div class="retencao-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        <span>Diagnóstico de Retenção do Estudo</span>
+      </div>
+      <div class="retencao-percentage">
+        <strong>{{ taxaRetencao }}%</strong> Dominados
+      </div>
+    </div>
+    <div class="retencao-bar-container">
+      <div class="retencao-bar-fill" [style.width.%]="taxaRetencao"></div>
+    </div>
+    <div class="retencao-stats-grid">
+      <div class="retencao-stat-card stat-total">
+        <span class="stat-value">{{ totalErrosCount }}</span>
+        <span class="stat-label">Total de Erros</span>
+      </div>
+      <div class="retencao-stat-card stat-pendentes">
+        <span class="stat-value">{{ errosPendentesCount }}</span>
+        <span class="stat-label">Pendentes de Revisão</span>
+      </div>
+      <div class="retencao-stat-card stat-revisados">
+        <span class="stat-value">{{ errosRevisadosCount }}</span>
+        <span class="stat-label">Revisados & Conquistados</span>
+      </div>
+    </div>
+  </div>
 
-  <!-- Formulário para criar novo erro -->
-  <div class="form-container" *ngIf="mostrarFormulario">
-    <h2>Novo Erro</h2>
+  <!-- Banner para usuários não autenticados -->
+  <div *ngIf="!(authService.isLoggedIn$ | async)" class="auth-notice">
+    <div class="auth-notice-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+    </div>
+    <div class="auth-notice-text">
+      <strong>Modo de Visualização:</strong> Faça <a routerLink="/login">login</a> ou <a routerLink="/register">cadastre-se</a> para <strong>registrar novos erros, marcar como revisado ou excluir</strong>.
+    </div>
+  </div>
+
+  <!-- Botão para alternar formulário (apenas se autenticado) -->
+  <div *ngIf="authService.isLoggedIn$ | async" class="action-bar">
+    <button class="btn btn-primary" (click)="toggleFormulario()">
+      {{ mostrarFormulario ? 'Cancelar' : '+ Cadastrar Novo Erro' }}
+    </button>
+  </div>
+
+  <!-- Formulário de cadastro de erro -->
+  <div *ngIf="mostrarFormulario && (authService.isLoggedIn$ | async)" class="form-container">
+    <h2>Cadastrar Novo Erro</h2>
     <form (ngSubmit)="criarErro()">
-      <div class="form-group">
-        <label>Questão *</label>
-        <textarea
-          [(ngModel)]="novoErro.questao"
-          name="questao"
-          placeholder="Descreva a questão..."
-          class="form-control"
-          rows="3"
-          required
-        ></textarea>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>Minha Resposta</label>
-          <input
-            type="text"
-            [(ngModel)]="novoErro.minhaResposta"
-            name="minhaResposta"
-            placeholder="Sua resposta..."
-            class="form-control"
-          />
-        </div>
-
-        <div class="form-group">
-          <label>Resposta Correta</label>
-          <input
-            type="text"
-            [(ngModel)]="novoErro.respostaCorreta"
-            name="respostaCorreta"
-            placeholder="Resposta correta..."
-            class="form-control"
-          />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Explicação</label>
-        <textarea
-          [(ngModel)]="novoErro.explicacao"
-          name="explicacao"
-          placeholder="Por que errei? O que aprendi?"
-          class="form-control"
-          rows="3"
-        ></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>Observações</label>
-        <textarea
-          [(ngModel)]="novoErro.observacoes"
-          name="observacoes"
-          placeholder="Observações adicionais..."
-          class="form-control"
-          rows="2"
-        ></textarea>
-      </div>
-
-      <div class="form-group" *ngIf="!assuntoId">
-        <label>Assunto *</label>
-        <select
-          [(ngModel)]="novoErro.assuntoId"
-          name="assuntoId"
-          class="form-control"
-          required
-        >
-          <option value="0">Selecione um assunto</option>
+      <div *ngIf="!assuntoId" class="form-group">
+        <label for="erro-assunto-select">Assunto *</label>
+        <select id="erro-assunto-select" [(ngModel)]="novoErro.assuntoId" name="assuntoId" class="form-control" required>
+          <option [value]="0" disabled selected>Selecione um assunto</option>
           <option *ngFor="let a of assuntos" [value]="a.id">
             {{ a.nomeMateria }} - {{ a.nome }}
           </option>
         </select>
       </div>
 
-      <div class="form-actions">
-        <button type="submit" class="btn btn-primary" [disabled]="loading">
-          {{ loading ? 'Salvando...' : 'Salvar Erro' }}
-        </button>
-        <button type="button" class="btn btn-secondary" (click)="resetarFormulario()">
-          Limpar
-        </button>
+      <div class="form-group">
+        <label for="erro-questao-input">Enunciado / Questão * (Ctrl+Enter para enviar)</label>
+        <textarea
+          id="erro-questao-input"
+          [(ngModel)]="novoErro.questao"
+          (keydown.control.enter)="criarErro()"
+          name="questao"
+          rows="3"
+          placeholder="Descreva a questão ou o enunciado do erro..."
+          class="form-control"
+          required
+        ></textarea>
       </div>
+
+      <div class="form-row">
+        <div class="form-group flex-1">
+          <label for="erro-gabarito-input">Resposta Correta</label>
+          <input
+            id="erro-gabarito-input"
+            type="text"
+            [(ngModel)]="novoErro.respostaCorreta"
+            name="respostaCorreta"
+            placeholder="Qual era o gabarito correto?"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group flex-1">
+          <label for="erro-minha-resposta-input">Sua Resposta (marcada na prova)</label>
+          <input
+            id="erro-minha-resposta-input"
+            type="text"
+            [(ngModel)]="novoErro.minhaResposta"
+            name="minhaResposta"
+            placeholder="O que você respondeu incorretamente?"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="erro-explicacao-input">Explicação / Taxonomia do Erro</label>
+        <div class="tag-selector-helper">
+          <span class="tag-helper-title">Adicionar Causa:</span>
+          <button type="button" class="btn-tag-preset tag-atenção" (click)="aplicarTagExplicacao('Falta de Atenção')">⚡ Falta de Atenção</button>
+          <button type="button" class="btn-tag-preset tag-pegadinha" (click)="aplicarTagExplicacao('Pegadinha da Banca')">🪤 Pegadinha da Banca</button>
+          <button type="button" class="btn-tag-preset tag-conteudo" (click)="aplicarTagExplicacao('Conteúdo Não Visto')">📖 Conteúdo Não Visto</button>
+          <button type="button" class="btn-tag-preset tag-memoria" (click)="aplicarTagExplicacao('Branco de Memória')">🧠 Branco de Memória</button>
+          <button type="button" class="btn-tag-preset tag-lei" (click)="aplicarTagExplicacao('Desconhecimento da Lei')">📜 Lei Seca</button>
+        </div>
+        <textarea
+          id="erro-explicacao-input"
+          [(ngModel)]="novoErro.explicacao"
+          name="explicacao"
+          rows="2"
+          placeholder="Por que você errou? Ex: Falta de atenção, pegadinha da banca, desconhecimento da lei..."
+          class="form-control"
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="erro-observacoes-input">Observações / Dicas de Estudo</label>
+        <textarea
+          id="erro-observacoes-input"
+          [(ngModel)]="novoErro.observacoes"
+          name="observacoes"
+          rows="2"
+          placeholder="Dicas para nunca mais errar este ponto..."
+          class="form-control"
+        ></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary" [disabled]="loading || !novoErro.questao.trim() || !novoErro.assuntoId">
+        {{ loading ? 'Salvando...' : 'Salvar Erro' }}
+      </button>
     </form>
+  </div>
+
+  <!-- Toast de Sucesso Celebratório -->
+  <div *ngIf="sucessoFeedback" class="alert alert-success toast-success">
+    {{ sucessoFeedback }}
   </div>
 
   <!-- Mensagem de erro -->
@@ -103,70 +161,156 @@
     {{ error }}
   </div>
 
+  <!-- Barra de Busca & Abas de Filtro v2 -->
+  <div class="filter-search-toolbar" *ngIf="totalErrosCount > 0">
+    <div class="filter-tabs">
+      <button
+        class="tab-btn"
+        [class.active]="filtroStatus === 'todos'"
+        (click)="setFiltroStatus('todos')"
+      >
+        Todos ({{ totalErrosCount }})
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="filtroStatus === 'pendentes'"
+        (click)="setFiltroStatus('pendentes')"
+      >
+        ⏳ Pendentes ({{ errosPendentesCount }})
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="filtroStatus === 'revisados'"
+        (click)="setFiltroStatus('revisados')"
+      >
+        ✓ Revisados ({{ errosRevisadosCount }})
+      </button>
+    </div>
+
+    <div class="search-input-wrapper">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input
+        type="text"
+        [(ngModel)]="termoBusca"
+        placeholder="Buscar por palavra-chave ou assunto..."
+        class="search-input"
+      />
+    </div>
+  </div>
+
   <!-- Lista de erros -->
   <div class="erros-list">
-    <h2>{{ assuntoId ? 'Erros deste Assunto' : 'Todos os Erros' }}</h2>
+    <h2>Registros de Erros</h2>
     <div *ngIf="loading && erros.length === 0" class="loading">
-      Carregando...
+      Carregando histórico de erros...
     </div>
     
     <div *ngIf="!loading && erros.length === 0" class="empty">
-      Nenhum erro cadastrado ainda. Comece adicionando seus primeiros erros!
+      <p>Nenhum erro cadastrado até o momento. Excelente trabalho!</p>
+      <button *ngIf="authService.isLoggedIn$ | async" class="btn btn-primary btn-empty-cta" (click)="toggleFormulario()">
+        + Cadastrar Primeiro Erro
+      </button>
     </div>
 
-    <div class="erro-card" *ngFor="let erro of erros" [class.revisado]="erro.revisado">
+    <div *ngIf="!loading && erros.length > 0 && errosFiltrados.length === 0" class="empty">
+      <p>Nenhum erro encontrado com os filtros selecionados.</p>
+    </div>
+
+    <div class="erro-card" [class.revisado]="erro.revisado" *ngFor="let erro of errosFiltrados">
       <div class="erro-header">
-        <div class="erro-info">
+        <div class="erro-tags">
           <span class="materia-tag">{{ erro.nomeMateria }}</span>
           <span class="assunto-tag">{{ erro.nomeAssunto }}</span>
-        </div>
-        <div class="erro-status">
-          <span class="data">{{ formatarData(erro.dataErro) }}</span>
-          <span class="badge-status" [class.badge-revisado]="erro.revisado">
-            {{ erro.revisado ? '✓ Revisado' : 'Não Revisado' }}
+          <span class="status-tag" [class.status-revisado]="erro.revisado">
+            <svg *ngIf="erro.revisado" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <svg *ngIf="!erro.revisado" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            {{ erro.revisado ? 'Revisado' : 'Pendente de Revisão' }}
           </span>
         </div>
+        <span class="data-erro">Data: {{ formatarData(erro.dataErro) }}</span>
       </div>
 
-      <div class="erro-content">
-        <div class="questao">
-          <strong>Questão:</strong>
-          <p>{{ erro.questao }}</p>
-        </div>
+      <div class="erro-body">
+        <h3 class="questao-title">Questão / Enunciado</h3>
+        <p class="questao-texto">{{ erro.questao }}</p>
 
-        <div class="respostas" *ngIf="erro.minhaResposta || erro.respostaCorreta">
-          <div class="resposta-item" *ngIf="erro.minhaResposta">
-            <strong>Minha Resposta:</strong>
-            <p class="resposta-errada">{{ erro.minhaResposta }}</p>
+        <div class="respostas-comparison" *ngIf="erro.respostaCorreta || erro.minhaResposta">
+          <div class="resposta minha" *ngIf="erro.minhaResposta">
+            <strong>Sua Resposta:</strong> {{ erro.minhaResposta }}
           </div>
-          <div class="resposta-item" *ngIf="erro.respostaCorreta">
-            <strong>Resposta Correta:</strong>
-            <p class="resposta-correta">{{ erro.respostaCorreta }}</p>
+          <div class="resposta correta" *ngIf="erro.respostaCorreta">
+            <strong>Gabarito Correto:</strong> {{ erro.respostaCorreta }}
           </div>
         </div>
 
-        <div class="explicacao" *ngIf="erro.explicacao">
-          <strong>Explicação:</strong>
+        <div class="secao-detalhes" *ngIf="erro.explicacao">
+          <h4>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="section-icon icon-bulb">
+              <path d="M9 18h6"></path>
+              <path d="M10 22h4"></path>
+              <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1.55.6 2.95 1.5 3.5.76.76 1.23 1.52 1.41 2.5"></path>
+            </svg>
+            Motivo / Explicação:
+          </h4>
           <p>{{ erro.explicacao }}</p>
         </div>
 
-        <div class="observacoes" *ngIf="erro.observacoes">
-          <strong>Observações:</strong>
+        <div class="secao-detalhes" *ngIf="erro.observacoes">
+          <h4>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="section-icon icon-pin">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            Observações & Dicas:
+          </h4>
           <p>{{ erro.observacoes }}</p>
         </div>
       </div>
 
       <div class="erro-footer">
-        <button 
-          class="btn btn-success" 
+        <button
+          *ngIf="!erro.revisado && (authService.isLoggedIn$ | async)"
+          class="btn btn-success"
           (click)="marcarRevisado(erro)"
-          *ngIf="!erro.revisado"
         >
           ✓ Marcar como Revisado
         </button>
-        <button class="btn btn-danger" (click)="excluirErro(erro.id)">
+        <button
+          *ngIf="authService.isLoggedIn$ | async"
+          class="btn btn-danger"
+          (click)="solicitarExclusao(erro)"
+        >
           Excluir
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmação de Exclusão (Acessível e Seguro) -->
+  <div *ngIf="itemParaExcluir" class="modal-backdrop" (click)="cancelarExclusao()">
+    <div class="modal-card" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-header">
+        <h3 id="modal-title">⚠️ Confirmar Exclusão</h3>
+        <button class="modal-close-btn" (click)="cancelarExclusao()" aria-label="Fechar modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>Tem certeza de que deseja excluir este registro de erro?</p>
+        <div class="modal-item-preview">
+          <strong>Enunciado:</strong> "{{ itemParaExcluir.questao }}"
+        </div>
+        <p class="modal-warning-text">Esta ação é irreversível e removerá o item do seu histórico de estudo.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="cancelarExclusao()">Cancelar</button>
+        <button class="btn btn-danger" (click)="confirmarExclusao()">Sim, Excluir Registro</button>
       </div>
     </div>
   </div>

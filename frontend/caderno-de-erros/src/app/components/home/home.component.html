@@ -1,56 +1,140 @@
 <div class="home-container">
-  <div class="hero">
-    <h1>📚 Caderno de Erros</h1>
-    <p class="subtitle">Organize seus erros e transforme-os em aprendizado</p>
-  </div>
-
-  <div class="features">
-    <div class="feature-card">
-      <div class="feature-icon">📖</div>
-      <h2>Organize por Matérias</h2>
-      <p>Crie e gerencie suas matérias de estudo de forma organizada</p>
+  <!-- Hero Section v2 -->
+  <header class="hero-v2">
+    <div class="hero-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+      </svg>
+      <span>O Método de Alta Performance para Concursos & Exames</span>
     </div>
+    
+    <h1 class="hero-title">Transforme Seus Erros em Aprendizado Definitivo</h1>
+    
+    <p class="hero-subtitle">
+      O Caderno de Erros v2 é um ambiente de alta precisão para registrar, categorizar por banca e assunto e revisar falhas em simulados e exames com foco em retenção total.
+    </p>
 
-    <div class="feature-card">
-      <div class="feature-icon">📝</div>
-      <h2>Divida em Assuntos</h2>
-      <p>Separe cada matéria em assuntos específicos para melhor controle</p>
-    </div>
-
-    <div class="feature-card">
-      <div class="feature-icon">❌</div>
-      <h2>Registre seus Erros</h2>
-      <p>Anote questões erradas com explicações detalhadas</p>
-    </div>
-
-    <div class="feature-card">
-      <div class="feature-icon">✅</div>
-      <h2>Revise e Aprenda</h2>
-      <p>Marque erros como revisados e acompanhe seu progresso</p>
-    </div>
-  </div>
-
-  <div class="actions">
-    <button class="btn btn-primary btn-large" (click)="navegarPara('/materias')">
-      Começar Agora
-    </button>
-  </div>
-
-  <div class="quick-links">
-    <h3>Acesso Rápido</h3>
-    <div class="links-grid">
-      <button class="link-card" (click)="navegarPara('/materias')">
-        <span class="link-icon">📚</span>
-        <span>Matérias</span>
+    <div class="hero-actions">
+      <button class="btn btn-primary btn-hero" (click)="navegarPara('/erros')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+        </svg>
+        Acessar Caderno de Erros
       </button>
-      <button class="link-card" (click)="navegarPara('/assuntos')">
-        <span class="link-icon">📝</span>
-        <span>Assuntos</span>
-      </button>
-      <button class="link-card" (click)="navegarPara('/erros')">
-        <span class="link-icon">❌</span>
-        <span>Todos os Erros</span>
+      <button class="btn btn-secondary btn-hero" (click)="navegarPara('/materias')">
+        Explorar Matérias →
       </button>
     </div>
-  </div>
+  </header>
+
+  <!-- O Método dos 4 Passos v2 -->
+  <section class="methodology-section">
+    <div class="section-header">
+      <h2 class="section-title">Como Funciona o Laboratório do Concurseiro</h2>
+      <p class="section-subtitle">O ciclo pós-resolução de questões desenhado para maximizar sua taxa de acerto nas provas.</p>
+    </div>
+
+    <div class="methodology-grid">
+      <div class="method-card">
+        <div class="method-icon-wrapper icon-indigo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </div>
+        <div class="method-step">Passo 01</div>
+        <h3>Mapeamento por Disciplina</h3>
+        <p>Cadastre matérias e desdobre em assuntos específicos para identificar com precisão técnica seus pontos fracos por conteúdo.</p>
+      </div>
+
+      <div class="method-card">
+        <div class="method-icon-wrapper icon-amber">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </div>
+        <div class="method-step">Passo 02</div>
+        <h3>Taxonomia da Falha</h3>
+        <p>Classifique a causa exata do erro: Pegadinha de Banca, Falta de Atenção, Desconhecimento da Lei Seca ou Branco de Memória.</p>
+      </div>
+
+      <div class="method-card">
+        <div class="method-icon-wrapper icon-rose">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+          </svg>
+        </div>
+        <div class="method-step">Passo 03</div>
+        <h3>Diagnóstico Lado a Lado</h3>
+        <p>Compare diretamente o que você assinalou na prova contra o gabarito correto com explicações detalhadas para correção do padrão.</p>
+      </div>
+
+      <div class="method-card">
+        <div class="method-icon-wrapper icon-emerald">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <div class="method-step">Passo 04</div>
+        <h3>Retenção & Conquista</h3>
+        <p>Execute sessões periódicas de revisão, marque erros como validados e monitore a porcentagem de retenção em tempo real.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Módulos Principais & Acesso Rápido v2 -->
+  <section class="quick-access-section">
+    <div class="section-header">
+      <h2 class="section-title">Módulos de Estudo</h2>
+    </div>
+
+    <div class="quick-cards-grid">
+      <div class="quick-nav-card" (click)="navegarPara('/materias')">
+        <div class="quick-card-icon icon-indigo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+        </div>
+        <div class="quick-card-content">
+          <h3>Matérias</h3>
+          <p>Gerencie as disciplinas de estudo e acompanhe a quantidade de assuntos desdobrados.</p>
+        </div>
+        <div class="quick-card-action">Acessar →</div>
+      </div>
+
+      <div class="quick-nav-card" (click)="navegarPara('/assuntos')">
+        <div class="quick-card-icon icon-teal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+        </div>
+        <div class="quick-card-content">
+          <h3>Assuntos</h3>
+          <p>Navegue pelos tópicos específicos de cada matéria e localize os erros cadastrados.</p>
+        </div>
+        <div class="quick-card-action">Acessar →</div>
+      </div>
+
+      <div class="quick-nav-card" (click)="navegarPara('/erros')">
+        <div class="quick-card-icon icon-emerald">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <div class="quick-card-content">
+          <h3>Caderno de Erros</h3>
+          <p>Acesse seu histórico completo de questões, execute revisões e consulte a taxa de retenção.</p>
+        </div>
+        <div class="quick-card-action">Acessar →</div>
+      </div>
+    </div>
+  </section>
 </div>

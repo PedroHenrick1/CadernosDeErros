@@ -1,10 +1,20 @@
 <div class="app-container">
   <nav class="navbar">
     <div class="nav-content">
-      <a routerLink="/" class="nav-brand">
-        📚 {{ title }}
-      </a>
-      <div class="nav-links">
+      <div class="nav-brand-group">
+        <a routerLink="/" (click)="fecharMobileMenu()" class="nav-brand">
+          <svg class="nav-brand-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+          <div class="brand-text-stack">
+            <span class="brand-title">{{ title }}</span>
+            <span class="brand-subtitle">Laboratório do Concurseiro v2</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="nav-links desktop-only">
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
           Home
         </a>
@@ -15,8 +25,56 @@
           Assuntos
         </a>
         <a routerLink="/erros" routerLinkActive="active" class="nav-link">
-          Erros
+          Caderno de Erros
         </a>
+      </div>
+
+      <div class="nav-auth desktop-only">
+        <ng-container *ngIf="authService.isLoggedIn$ | async; else anonymousUser">
+          <span class="user-badge" *ngIf="authService.currentUser$ | async as user">
+            <svg class="icon-user" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            {{ user.nome }}
+          </span>
+          <button (click)="logout()" class="btn-logout">
+            Sair
+          </button>
+        </ng-container>
+        <ng-template #anonymousUser>
+          <a routerLink="/login" class="nav-btn btn-login">Entrar</a>
+          <a routerLink="/register" class="nav-btn btn-register">Cadastrar</a>
+        </ng-template>
+      </div>
+
+      <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" aria-label="Menu principal">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Menu Mobile Drawer -->
+    <div class="mobile-drawer" *ngIf="mobileMenuAberto">
+      <a routerLink="/" (click)="fecharMobileMenu()" class="mobile-nav-link">Home</a>
+      <a routerLink="/materias" (click)="fecharMobileMenu()" class="mobile-nav-link">Matérias</a>
+      <a routerLink="/assuntos" (click)="fecharMobileMenu()" class="mobile-nav-link">Assuntos</a>
+      <a routerLink="/erros" (click)="fecharMobileMenu()" class="mobile-nav-link">Caderno de Erros</a>
+
+      <div class="mobile-auth-section">
+        <ng-container *ngIf="authService.isLoggedIn$ | async; else mobileAnonymous">
+          <span class="user-badge mobile-user-badge" *ngIf="authService.currentUser$ | async as user">
+            👤 {{ user.nome }}
+          </span>
+          <button (click)="logout()" class="btn-logout w-full">Sair</button>
+        </ng-container>
+        <ng-template #mobileAnonymous>
+          <a routerLink="/login" (click)="fecharMobileMenu()" class="nav-btn btn-login w-full text-center">Entrar</a>
+          <a routerLink="/register" (click)="fecharMobileMenu()" class="nav-btn btn-register w-full text-center">Cadastrar</a>
+        </ng-template>
       </div>
     </div>
   </nav>
@@ -26,7 +84,11 @@
   </main>
   
   <footer class="footer">
-    <p>© 2026 Caderno de Erros - Transforme seus erros em aprendizado</p>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <strong>Caderno de Erros v2</strong> — O Laboratório de Alta Precisão do Concurseiro
+      </div>
+      <p class="footer-copy">© 2026 Transforme falhas passadas em aprendizado definitivo para exames de alta concorrência.</p>
+    </div>
   </footer>
 </div>
-

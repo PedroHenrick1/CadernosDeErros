@@ -1,0 +1,59 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-icon">
+        🔒
+      </div>
+      <h2>Entrar no Caderno de Erros</h2>
+      <p class="auth-subtitle">Acesse sua conta para registrar matérias, assuntos e mapear seus erros de provas e simulados.</p>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-error">
+      <span>⚠️ {{ errorMessage }}</span>
+    </div>
+
+    <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          [(ngModel)]="loginData.email"
+          placeholder="seu.email@exemplo.com"
+          class="form-control"
+          required
+          email
+          #emailInput="ngModel"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="senha">Senha</label>
+        <input
+          type="password"
+          id="senha"
+          name="senha"
+          [(ngModel)]="loginData.senha"
+          placeholder="Sua senha secreta"
+          class="form-control"
+          required
+          #senhaInput="ngModel"
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary btn-block"
+        [disabled]="loading || !loginForm.valid"
+      >
+        <span *ngIf="!loading">Entrar na Conta</span>
+        <span *ngIf="loading">Autenticando...</span>
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <p>Ainda não possui uma conta? <a routerLink="/register">Cadastre-se gratuitamente</a></p>
+    </div>
+  </div>
+</div>

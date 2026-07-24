@@ -1,11 +1,14 @@
+using System.Security.Claims;
 using CadernosDeErros.Entities;
 using CadernosDeErros.DTOs;
 using CadernosDeErros.Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CadernosDeErros.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class MateriaController : ControllerBase
@@ -19,11 +22,23 @@ namespace CadernosDeErros.Controllers
             _logger = logger;
         }
 
+        private int GetUserId()
+        {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (int.TryParse(claim, out var userId))
+            {
+                return userId;
+            }
+            throw new UnauthorizedAccessException("Usu√°rio n√£o autenticado.");
+        }
+
         // GET: api/Materia
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MateriaDto>>> GetMaterias()
         {
+            var userId = GetUserId();
             var materias = await _context.Materias
+                .Where(m => m.UsuarioId == userId)
                 .Include(m => m.Assuntos)
                 .ToListAsync();
 
@@ -40,13 +55,14 @@ namespace CadernosDeErros.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<MateriaDto>> GetMateria(int id)
         {
+            var userId = GetUserId();
             var materia = await _context.Materias
                 .Include(m => m.Assuntos)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id && m.UsuarioId == userId);
 
             if (materia == null)
             {
-                return NotFound(new { message = "MatÈria n„o encontrada" });
+                return NotFound(new { message = "Mat√©ria n√£o encontrada" });
             }
 
             var materiaDto = new MateriaDto
@@ -64,9 +80,11 @@ namespace CadernosDeErros.Controllers
         [HttpPost]
         public async Task<ActionResult<MateriaDto>> PostMateria(CreateMateriaDto createDto)
         {
+            var userId = GetUserId();
             var materia = new Materia
             {
                 Nome = createDto.Nome,
+                UsuarioId = userId,
                 DataCriacao = DateTime.UtcNow
             };
 
@@ -88,14 +106,14 @@ namespace CadernosDeErros.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMateria(int id, UpdateMateriaDto updateDto)
         {
-            var materia = await _context.Materias.FindAsync(id);
+            var userId = GetUserId();
+            var materia = await _context.Materias.FirstOrDefaultAsync(m => m.Id == id && m.UsuarioId == userId);
             
             if (materia == null)
             {
-                return NotFound(new { message = "MatÈria n„o encontrada" });
+                return NotFound(new { message = "Mat√©ria n√£o encontrada" });
             }
 
-            // Atualiza apenas os campos que foram enviados
             if (updateDto.Nome != null)
             {
                 materia.Nome = updateDto.Nome;
@@ -110,21 +128,17 @@ namespace CadernosDeErros.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMateria(int id)
         {
-            var materia = await _context.Materias.FindAsync(id);
+            var userId = GetUserId();
+            var materia = await _context.Materias.FirstOrDefaultAsync(m => m.Id == id && m.UsuarioId == userId);
             if (materia == null)
             {
-                return NotFound(new { message = "MatÈria n„o encontrada" });
+                return NotFound(new { message = "Mat√©ria n√£o encontrada" });
             }
 
             _context.Materias.Remove(materia);
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool MateriaExists(int id)
-        {
-            return _context.Materias.Any(e => e.Id == id);
         }
     }
 }

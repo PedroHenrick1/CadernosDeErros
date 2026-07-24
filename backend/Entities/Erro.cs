@@ -1,4 +1,4 @@
-﻿namespace CadernosDeErros.Entities
+namespace CadernosDeErros.Entities
 {
     public class Erro
     {
@@ -9,11 +9,13 @@
         public string? Explicacao { get; set; }
         public string? Observacoes { get; set; }
         public int AssuntoId { get; set; }
+        public int UsuarioId { get; set; }
         public DateTime DataErro { get; set; } = DateTime.UtcNow;
         public DateTime? DataRevisao { get; set; }
         public bool Revisado { get; set; } = false;
 
-        // Navigation property
+        // Navigation properties
         public Assunto Assunto { get; set; } = null!;
+        public Usuario Usuario { get; set; } = null!;
     }
 }

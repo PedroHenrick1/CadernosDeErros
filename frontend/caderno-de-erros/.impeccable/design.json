@@ -1,0 +1,258 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-23T20:56:53-03:00",
+  "title": "Design System: Caderno de Erros",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Índigo Foco",
+        "canonical": "oklch(52.7% 0.22 265)",
+        "tonalRamp": [
+          "#1e1b4b",
+          "#312e81",
+          "#3730a3",
+          "#4338ca",
+          "#4f46e5",
+          "#6366f1",
+          "#818cf8",
+          "#eef2ff"
+        ]
+      },
+      "success": {
+        "role": "secondary",
+        "displayName": "Verde Revisado",
+        "canonical": "oklch(62.7% 0.19 145)",
+        "tonalRamp": [
+          "#052e16",
+          "#14532d",
+          "#15803d",
+          "#16a34a",
+          "#22c55e",
+          "#4ade80",
+          "#86efac",
+          "#dcfce7"
+        ]
+      },
+      "danger": {
+        "role": "tertiary",
+        "displayName": "Vermelho Erro",
+        "canonical": "oklch(63.7% 0.22 25)",
+        "tonalRamp": [
+          "#450a0a",
+          "#7f1d1d",
+          "#991b1b",
+          "#dc2626",
+          "#ef4444",
+          "#f87171",
+          "#fca5a5",
+          "#fef2f2"
+        ]
+      },
+      "warning": {
+        "role": "tertiary",
+        "displayName": "Âmbar Pendente",
+        "canonical": "oklch(55.3% 0.16 65)",
+        "tonalRamp": [
+          "#451a03",
+          "#78350f",
+          "#92400e",
+          "#b45309",
+          "#d97706",
+          "#f59e0b",
+          "#fcd34d",
+          "#fef3c7"
+        ]
+      },
+      "neutral-bg": {
+        "role": "neutral",
+        "displayName": "Fundo Slate Ultra-Claro",
+        "canonical": "oklch(98.4% 0.006 247)",
+        "tonalRamp": [
+          "#020617",
+          "#0f172a",
+          "#1e293b",
+          "#334155",
+          "#64748b",
+          "#94a3b8",
+          "#cbd5e1",
+          "#f8fafc"
+        ]
+      },
+      "neutral-surface": {
+        "role": "neutral",
+        "displayName": "Superfície Branco Puro",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#111111",
+          "#333333",
+          "#555555",
+          "#777777",
+          "#999999",
+          "#bbbbbb",
+          "#dddddd",
+          "#ffffff"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display Hero",
+        "purpose": "Usado em títulos principais da landing page."
+      },
+      "headline": {
+        "displayName": "Headline de Página",
+        "purpose": "Título principal de páginas operacionais como Matérias e Erros."
+      },
+      "title": {
+        "displayName": "Título de Seção / Cartão",
+        "purpose": "Cabeçalhos de formulários e cartões principais."
+      },
+      "body": {
+        "displayName": "Texto Principal / Questão",
+        "purpose": "Leitura de enunciados de questões, explicações de erro e observações."
+      },
+      "label": {
+        "displayName": "Rótulo / Badges",
+        "purpose": "Rótulos de campos de formulário, títulos de metadados e tags."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card-rest",
+        "value": "0 1px 3px rgba(0, 0, 0, 0.05)",
+        "purpose": "Elevação discreta de descanso para cartões sobre o fundo Slate."
+      },
+      {
+        "name": "form-container",
+        "value": "0 4px 6px -1px rgba(0, 0, 0, 0.05)",
+        "purpose": "Destaca formulários de cadastro e alteração."
+      },
+      {
+        "name": "card-hover",
+        "value": "0 4px 12px rgba(0, 0, 0, 0.05)",
+        "purpose": "Elevação tátil ao passar o mouse em cartões interativos."
+      },
+      {
+        "name": "auth-card",
+        "value": "0 10px 25px rgba(0, 0, 0, 0.08)",
+        "purpose": "Elevação acentuada para cartões centrais de login e registro."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-standard",
+        "value": "all 0.2s ease",
+        "purpose": "Transição padrão para elevação de cartões, botões e foco em campos."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Botão principal de confirmação e salvamento.",
+      "html": "<button class=\"ds-btn-primary\">Salvar Erro</button>",
+      "css": ".ds-btn-primary { background-color: #4f46e5; color: #ffffff; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 14px; border: none; cursor: pointer; transition: all 0.2s ease; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; } .ds-btn-primary:hover { background-color: #4338ca; } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Botão secundário para ações neutras ou cancelamento.",
+      "html": "<button class=\"ds-btn-secondary\">Cancelar</button>",
+      "css": ".ds-btn-secondary { background-color: #f1f5f9; color: #334155; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 14px; border: none; cursor: pointer; transition: all 0.2s ease; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; } .ds-btn-secondary:hover { background-color: #e2e8f0; }"
+    },
+    {
+      "name": "Danger Button",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Botão para ações de exclusão ou alerta.",
+      "html": "<button class=\"ds-btn-danger\">Excluir</button>",
+      "css": ".ds-btn-danger { background-color: #fef2f2; color: #ef4444; border: 1px solid #fca5a5; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s ease; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; } .ds-btn-danger:hover { background-color: #fee2e2; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input-text",
+      "description": "Campo de entrada de texto padrão para formulários.",
+      "html": "<input type=\"text\" class=\"ds-input-text\" placeholder=\"Digite o enunciado ou assunto...\" />",
+      "css": ".ds-input-text { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; background-color: #ffffff; color: #0f172a; box-sizing: border-box; transition: all 0.2s ease; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; } .ds-input-text:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15); }"
+    },
+    {
+      "name": "Erro Card",
+      "kind": "card",
+      "refersTo": "card-surface",
+      "description": "Cartão para exibição individual de erro registrado.",
+      "html": "<div class=\"ds-erro-card ds-revisado\"><div class=\"ds-erro-header\"><div class=\"ds-erro-tags\"><span class=\"ds-tag-materia\">Direito Constitucional</span><span class=\"ds-tag-status ds-status-revisado\">Revisado</span></div><span class=\"ds-erro-data\">23/07/2026</span></div><div class=\"ds-erro-body\"><div class=\"ds-questao-title\">Enunciado da Questão</div><div class=\"ds-questao-texto\">Segundo a CF/88, a propriedade atenderá a sua função social.</div></div></div>",
+      "css": ".ds-erro-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); transition: transform 0.2s ease, box-shadow 0.2s ease; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; } .ds-erro-card.ds-revisado { border-left: 4px solid #22c55e; background-color: #fafafa; } .ds-erro-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); } .ds-erro-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9; } .ds-erro-tags { display: flex; gap: 8px; align-items: center; } .ds-tag-materia { background-color: #e0e7ff; color: #4338ca; font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 6px; } .ds-tag-status { font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 6px; } .ds-status-revisado { background-color: #dcfce7; color: #15803d; } .ds-erro-data { font-size: 13px; color: #94a3b8; } .ds-questao-title { font-size: 13px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; } .ds-questao-texto { font-size: 15px; line-height: 1.6; color: #1e293b; }"
+    },
+    {
+      "name": "Matéria Badge",
+      "kind": "chip",
+      "refersTo": "button-secondary",
+      "description": "Tag de identificação da matéria.",
+      "html": "<span class=\"ds-badge-materia\">Direito Administrativo</span>",
+      "css": ".ds-badge-materia { display: inline-block; background-color: #e0e7ff; color: #4338ca; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "O Laboratório do Concurseiro",
+    "overview": "O Caderno de Erros é projetado como um ambiente de trabalho de alta precisão para estudantes e concurseiros em rotinas intensas de preparação. A interface busca eliminar distrações visuais e fadiga cognitiva durante sessões prolongadas de estudo, priorizando a organização hierárquica clara e a legibilidade máxima das questões.\n\nA atmosfera visual combina superfícies brancas puras elevadas sobre um plano de fundo suave em tom Slate, demarcadas por bordas delicadas e cantos levemente arredondados. O tom da marca é ancorado pelo azul Índigo, utilizado para sinalizar ações primárias e navegação ativa.",
+    "keyCharacteristics": [
+      "Ergonomia de Estudo Prolongado: Fundo claro de baixo contraste (#f8fafc) com tipografia Slate legível (#1e293b / #334155).",
+      "Hierarquia Visual Nítida: Estrutura bem definida entre cabeçalhos de seções, dados de comparação e cartões de conteúdo.",
+      "Feedback Tátil e Previsível: Microinterações suaves de elevação (-2px) nos cartões interativos e anéis de foco bem marcados em formulários.",
+      "Semântica de Status Funcional: Badges e marcadores coloridos para distinção imediata entre matérias, assuntos e status de revisão."
+    ],
+    "rules": [
+      {
+        "name": "The 10% Primary Rule",
+        "body": "O tom Índigo primário é reservado estritamente para ações principais e pontos de navegação ativos, ocupando ≤10% da área útil da tela.",
+        "section": "colors"
+      },
+      {
+        "name": "The Status Clarity Rule",
+        "body": "Verde e Vermelho em blocos de comparação de respostas são usados de forma absoluta para eliminar qualquer ambiguidade entre a escolha do usuário e o gabarito.",
+        "section": "colors"
+      },
+      {
+        "name": "The Readable Question Rule",
+        "body": "Textos de enunciado de questões (.questao-texto) utilizam line-height: 1.6 e preservação de quebra de linha (white-space: pre-line) para facilitar a leitura de enunciados longos.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-Rest Tactile-Hover Rule",
+        "body": "Elementos descansam planos com borda sutil (1px solid #e2e8f0). Apenas ao interagir (hover/focus), o elemento eleva suavemente.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do usar o contêiner de 900px em páginas operacionais para manter os enunciados das questões dentro de uma largura de linha confortável.",
+      "Do indicar claramente o estado de revisão do erro utilizando a borda lateral verde e a badge correspondente.",
+      "Do utilizar anéis de foco translúcidos (rgba(99, 102, 241, 0.15)) em todos os campos de formulário e botões interativos para garantir acessibilidade por teclado.",
+      "Do manter a comparação visual explicita entre 'Minha Resposta' (vermelho) e 'Resposta Correta' (verde)."
+    ],
+    "donts": [
+      "Don't utilizar fundos de tela com alto nível de saturação ou gradientes agressivos dentro do fluxo de trabalho diário do aluno.",
+      "Don't remover a borda sutil de contêineres e cartões para evitar que os elementos percam definição sobre o fundo Slate.",
+      "Don't aplicar a cor primária Índigo em mais de 10% da tela para manter seu poder de direcionar a atenção do usuário.",
+      "Don't alterar os tamanhos de fonte padrão dos enunciados para valores abaixo de 15px."
+    ]
+  }
+}

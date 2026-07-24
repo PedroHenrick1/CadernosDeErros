@@ -1,11 +1,14 @@
+using System.Security.Claims;
 using CadernosDeErros.Entities;
 using CadernosDeErros.DTOs;
 using CadernosDeErros.Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CadernosDeErros.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class AssuntoController : ControllerBase
@@ -19,11 +22,23 @@ namespace CadernosDeErros.Controllers
             _logger = logger;
         }
 
+        private int GetUserId()
+        {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (int.TryParse(claim, out var userId))
+            {
+                return userId;
+            }
+            throw new UnauthorizedAccessException("Usu√°rio n√£o autenticado.");
+        }
+
         // GET: api/Assunto
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AssuntoDto>>> GetAssuntos()
         {
+            var userId = GetUserId();
             var assuntos = await _context.Assuntos
+                .Where(a => a.UsuarioId == userId)
                 .Include(a => a.Materia)
                 .Include(a => a.Erros)
                 .ToListAsync();
@@ -43,14 +58,15 @@ namespace CadernosDeErros.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<AssuntoDto>> GetAssunto(int id)
         {
+            var userId = GetUserId();
             var assunto = await _context.Assuntos
                 .Include(a => a.Materia)
                 .Include(a => a.Erros)
-                .FirstOrDefaultAsync(a => a.Id == id);
+                .FirstOrDefaultAsync(a => a.Id == id && a.UsuarioId == userId);
 
             if (assunto == null)
             {
-                return NotFound(new { message = "Assunto n„o encontrado" });
+                return NotFound(new { message = "Assunto n√£o encontrado" });
             }
 
             var assuntoDto = new AssuntoDto
@@ -70,8 +86,9 @@ namespace CadernosDeErros.Controllers
         [HttpGet("Materia/{materiaId}")]
         public async Task<ActionResult<IEnumerable<AssuntoDto>>> GetAssuntosByMateria(int materiaId)
         {
+            var userId = GetUserId();
             var assuntos = await _context.Assuntos
-                .Where(a => a.MateriaId == materiaId)
+                .Where(a => a.MateriaId == materiaId && a.UsuarioId == userId)
                 .Include(a => a.Materia)
                 .Include(a => a.Erros)
                 .ToListAsync();
@@ -91,17 +108,22 @@ namespace CadernosDeErros.Controllers
         [HttpPost]
         public async Task<ActionResult<AssuntoDto>> PostAssunto(CreateAssuntoDto createDto)
         {
-            // Verifica se a matÈria existe
-            var materia = await _context.Materias.FindAsync(createDto.MateriaId);
+            var userId = GetUserId();
+            
+            // Verifica se a mat√©ria existe e pertence ao usu√°rio
+            var materia = await _context.Materias
+                .FirstOrDefaultAsync(m => m.Id == createDto.MateriaId && m.UsuarioId == userId);
+            
             if (materia == null)
             {
-                return BadRequest(new { message = "MatÈria n„o encontrada" });
+                return BadRequest(new { message = "Mat√©ria n√£o encontrada ou n√£o pertence a este usu√°rio" });
             }
 
             var assunto = new Assunto
             {
                 Nome = createDto.Nome,
                 MateriaId = createDto.MateriaId,
+                UsuarioId = userId,
                 DataCriacao = DateTime.UtcNow
             };
 
@@ -125,14 +147,14 @@ namespace CadernosDeErros.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAssunto(int id, UpdateAssuntoDto updateDto)
         {
-            var assunto = await _context.Assuntos.FindAsync(id);
+            var userId = GetUserId();
+            var assunto = await _context.Assuntos.FirstOrDefaultAsync(a => a.Id == id && a.UsuarioId == userId);
             
             if (assunto == null)
             {
-                return NotFound(new { message = "Assunto n„o encontrado" });
+                return NotFound(new { message = "Assunto n√£o encontrado" });
             }
 
-            // Atualiza apenas os campos que foram enviados
             if (updateDto.Nome != null)
             {
                 assunto.Nome = updateDto.Nome;
@@ -140,11 +162,11 @@ namespace CadernosDeErros.Controllers
 
             if (updateDto.MateriaId.HasValue)
             {
-                // Verifica se a nova matÈria existe
-                var materiaExists = await _context.Materias.AnyAsync(m => m.Id == updateDto.MateriaId.Value);
+                var materiaExists = await _context.Materias
+                    .AnyAsync(m => m.Id == updateDto.MateriaId.Value && m.UsuarioId == userId);
                 if (!materiaExists)
                 {
-                    return BadRequest(new { message = "MatÈria n„o encontrada" });
+                    return BadRequest(new { message = "Mat√©ria n√£o encontrada ou n√£o pertence a este usu√°rio" });
                 }
                 assunto.MateriaId = updateDto.MateriaId.Value;
             }
@@ -158,30 +180,25 @@ namespace CadernosDeErros.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAssunto(int id)
         {
+            var userId = GetUserId();
             var assunto = await _context.Assuntos
                 .Include(a => a.Erros)
-                .FirstOrDefaultAsync(a => a.Id == id);
+                .FirstOrDefaultAsync(a => a.Id == id && a.UsuarioId == userId);
 
             if (assunto == null)
             {
-                return NotFound(new { message = "Assunto n„o encontrado" });
+                return NotFound(new { message = "Assunto n√£o encontrado" });
             }
 
-            // Verifica se h· erros associados (devido ao Restrict no banco)
             if (assunto.Erros.Any())
             {
-                return BadRequest(new { message = "N„o È possÌvel deletar assunto com erros cadastrados" });
+                return BadRequest(new { message = "N√£o √© poss√≠vel deletar assunto com erros cadastrados" });
             }
 
             _context.Assuntos.Remove(assunto);
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool AssuntoExists(int id)
-        {
-            return _context.Assuntos.Any(e => e.Id == id);
         }
     }
 }

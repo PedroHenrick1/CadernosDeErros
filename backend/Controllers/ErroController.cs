@@ -1,11 +1,14 @@
+using System.Security.Claims;
 using CadernosDeErros.Entities;
 using CadernosDeErros.DTOs;
 using CadernosDeErros.Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CadernosDeErros.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ErroController : ControllerBase
@@ -19,11 +22,23 @@ namespace CadernosDeErros.Controllers
             _logger = logger;
         }
 
+        private int GetUserId()
+        {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (int.TryParse(claim, out var userId))
+            {
+                return userId;
+            }
+            throw new UnauthorizedAccessException("Usuário não autenticado.");
+        }
+
         // GET: api/Erro
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ErroDto>>> GetErros()
         {
+            var userId = GetUserId();
             var erros = await _context.Erros
+                .Where(e => e.UsuarioId == userId)
                 .Include(e => e.Assunto)
                     .ThenInclude(a => a.Materia)
                 .OrderByDescending(e => e.DataErro)
@@ -50,14 +65,15 @@ namespace CadernosDeErros.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ErroDto>> GetErro(int id)
         {
+            var userId = GetUserId();
             var erro = await _context.Erros
                 .Include(e => e.Assunto)
                     .ThenInclude(a => a.Materia)
-                .FirstOrDefaultAsync(e => e.Id == id);
+                .FirstOrDefaultAsync(e => e.Id == id && e.UsuarioId == userId);
 
             if (erro == null)
             {
-                return NotFound(new { message = "Erro n�o encontrado" });
+                return NotFound(new { message = "Erro não encontrado" });
             }
 
             var erroDto = new ErroDto
@@ -83,8 +99,9 @@ namespace CadernosDeErros.Controllers
         [HttpGet("Assunto/{assuntoId}")]
         public async Task<ActionResult<IEnumerable<ErroDto>>> GetErrosByAssunto(int assuntoId)
         {
+            var userId = GetUserId();
             var erros = await _context.Erros
-                .Where(e => e.AssuntoId == assuntoId)
+                .Where(e => e.AssuntoId == assuntoId && e.UsuarioId == userId)
                 .Include(e => e.Assunto)
                     .ThenInclude(a => a.Materia)
                 .OrderByDescending(e => e.DataErro)
@@ -111,10 +128,11 @@ namespace CadernosDeErros.Controllers
         [HttpGet("Materia/{materiaId}")]
         public async Task<ActionResult<IEnumerable<ErroDto>>> GetErrosByMateria(int materiaId)
         {
+            var userId = GetUserId();
             var erros = await _context.Erros
                 .Include(e => e.Assunto)
                     .ThenInclude(a => a.Materia)
-                .Where(e => e.Assunto.MateriaId == materiaId)
+                .Where(e => e.Assunto.MateriaId == materiaId && e.UsuarioId == userId)
                 .OrderByDescending(e => e.DataErro)
                 .ToListAsync();
 
@@ -139,10 +157,11 @@ namespace CadernosDeErros.Controllers
         [HttpGet("NaoRevisados")]
         public async Task<ActionResult<IEnumerable<ErroDto>>> GetErrosNaoRevisados()
         {
+            var userId = GetUserId();
             var erros = await _context.Erros
                 .Include(e => e.Assunto)
                     .ThenInclude(a => a.Materia)
-                .Where(e => !e.Revisado)
+                .Where(e => !e.Revisado && e.UsuarioId == userId)
                 .OrderByDescending(e => e.DataErro)
                 .ToListAsync();
 
@@ -167,14 +186,14 @@ namespace CadernosDeErros.Controllers
         [HttpPost]
         public async Task<ActionResult<ErroDto>> PostErro(CreateErroDto createDto)
         {
-            // Verifica se o assunto existe
+            var userId = GetUserId();
             var assunto = await _context.Assuntos
                 .Include(a => a.Materia)
-                .FirstOrDefaultAsync(a => a.Id == createDto.AssuntoId);
+                .FirstOrDefaultAsync(a => a.Id == createDto.AssuntoId && a.UsuarioId == userId);
             
             if (assunto == null)
             {
-                return BadRequest(new { message = "Assunto n�o encontrado" });
+                return BadRequest(new { message = "Assunto não encontrado ou não pertence a este usuário" });
             }
 
             var erro = new Erro
@@ -185,6 +204,7 @@ namespace CadernosDeErros.Controllers
                 Explicacao = createDto.Explicacao,
                 Observacoes = createDto.Observacoes,
                 AssuntoId = createDto.AssuntoId,
+                UsuarioId = userId,
                 DataErro = DateTime.UtcNow
             };
 
@@ -214,14 +234,14 @@ namespace CadernosDeErros.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutErro(int id, UpdateErroDto updateDto)
         {
-            var erro = await _context.Erros.FindAsync(id);
+            var userId = GetUserId();
+            var erro = await _context.Erros.FirstOrDefaultAsync(e => e.Id == id && e.UsuarioId == userId);
             
             if (erro == null)
             {
-                return NotFound(new { message = "Erro n�o encontrado" });
+                return NotFound(new { message = "Erro não encontrado" });
             }
 
-            // Atualiza apenas os campos que foram enviados
             if (updateDto.Questao != null)
             {
                 erro.Questao = updateDto.Questao;
@@ -249,11 +269,11 @@ namespace CadernosDeErros.Controllers
 
             if (updateDto.AssuntoId.HasValue)
             {
-                // Verifica se o novo assunto existe
-                var assuntoExists = await _context.Assuntos.AnyAsync(a => a.Id == updateDto.AssuntoId.Value);
+                var assuntoExists = await _context.Assuntos
+                    .AnyAsync(a => a.Id == updateDto.AssuntoId.Value && a.UsuarioId == userId);
                 if (!assuntoExists)
                 {
-                    return BadRequest(new { message = "Assunto n�o encontrado" });
+                    return BadRequest(new { message = "Assunto não encontrado ou não pertence a este usuário" });
                 }
                 erro.AssuntoId = updateDto.AssuntoId.Value;
             }
@@ -267,10 +287,11 @@ namespace CadernosDeErros.Controllers
         [HttpPatch("{id}/Revisar")]
         public async Task<IActionResult> MarcarComoRevisado(int id)
         {
-            var erro = await _context.Erros.FindAsync(id);
+            var userId = GetUserId();
+            var erro = await _context.Erros.FirstOrDefaultAsync(e => e.Id == id && e.UsuarioId == userId);
             if (erro == null)
             {
-                return NotFound(new { message = "Erro n�o encontrado" });
+                return NotFound(new { message = "Erro não encontrado" });
             }
 
             erro.Revisado = true;
@@ -284,21 +305,17 @@ namespace CadernosDeErros.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteErro(int id)
         {
-            var erro = await _context.Erros.FindAsync(id);
+            var userId = GetUserId();
+            var erro = await _context.Erros.FirstOrDefaultAsync(e => e.Id == id && e.UsuarioId == userId);
             if (erro == null)
             {
-                return NotFound(new { message = "Erro n�o encontrado" });
+                return NotFound(new { message = "Erro não encontrado" });
             }
 
             _context.Erros.Remove(erro);
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool ErroExists(int id)
-        {
-            return _context.Erros.Any(e => e.Id == id);
         }
     }
 }
