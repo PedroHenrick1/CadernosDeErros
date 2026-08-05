@@ -97,12 +97,12 @@ h1 {
 }
 
 .btn-primary {
-  background-color: #6366f1;
+  background-color: #DD700B;
   color: #ffffff;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #4f46e5;
+  background-color: #c56208;
 }
 
 .btn-primary:disabled {
@@ -111,12 +111,12 @@ h1 {
 }
 
 .btn-secondary {
-  background-color: #f1f5f9;
-  color: #334155;
+  background-color: #ADACA7;
+  color: #ffffff;
 }
 
 .btn-secondary:hover {
-  background-color: #e2e8f0;
+  background-color: #999893;
 }
 
 .btn-danger {

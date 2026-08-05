@@ -20,14 +20,14 @@ export class LoginComponent {
 
   loading = false;
   errorMessage: string | null = null;
-  returnUrl = '/';
+  returnUrl = '/erros';
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute
   ) {
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/erros';
   }
 
   onLogin(): void {

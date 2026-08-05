@@ -64,8 +64,8 @@
 
 .form-control:focus {
   outline: none;
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+  border-color: #DD700B;
+  box-shadow: 0 0 0 3px rgba(221, 112, 11, 0.15);
 }
 
 .btn-block {
@@ -76,14 +76,14 @@
   border-radius: 8px;
   cursor: pointer;
   border: none;
-  background-color: #4f46e5;
+  background-color: #DD700B;
   color: #ffffff;
   transition: background-color 0.2s ease;
   margin-top: 10px;
 }
 
 .btn-block:hover:not(:disabled) {
-  background-color: #4338ca;
+  background-color: #c56208;
 }
 
 .btn-block:disabled {
@@ -111,7 +111,7 @@
 }
 
 .auth-footer a {
-  color: #4f46e5;
+  color: #DD700B;
   font-weight: 600;
   text-decoration: none;
 }

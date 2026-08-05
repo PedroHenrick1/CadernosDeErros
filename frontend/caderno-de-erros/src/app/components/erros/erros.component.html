@@ -6,7 +6,7 @@
     <h1>{{ assunto ? 'Erros em ' + assunto.nome : 'Todos os Erros Cadastrados' }}</h1>
   </div>
 
-  <!-- Painel de Diagnóstico & Retenção de Estudo ("Laboratório do Concurseiro") -->
+  <!-- Painel de Diagnóstico & Retenção de Estudo ("Laboratório do Estudante") -->
   <div class="retencao-dashboard" *ngIf="totalErrosCount > 0">
     <div class="retencao-header">
       <div class="retencao-title">
@@ -161,7 +161,7 @@
     {{ error }}
   </div>
 
-  <!-- Barra de Busca & Abas de Filtro v2 -->
+  <!-- Barra de Busca & Abas de Filtro -->
   <div class="filter-search-toolbar" *ngIf="totalErrosCount > 0">
     <div class="filter-tabs">
       <button

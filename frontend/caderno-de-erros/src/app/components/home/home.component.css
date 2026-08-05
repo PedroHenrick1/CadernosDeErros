@@ -3,8 +3,8 @@
   margin: 0 auto;
 }
 
-/* Hero Section v2 */
-.hero-v2 {
+/* Hero Section */
+.hero {
   text-align: center;
   padding: 48px 24px;
   background: #ffffff;
@@ -12,24 +12,6 @@
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
   margin-bottom: 40px;
-}
-
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background-color: #eef2ff;
-  color: #4338ca;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 6px 14px;
-  border-radius: 9999px;
-  margin-bottom: 20px;
-  border: 1px solid #c7d2fe;
-}
-
-.hero-badge svg {
-  color: #4f46e5;
 }
 
 .hero-title {
@@ -64,6 +46,30 @@
   font-size: 15px;
   font-weight: 600;
   border-radius: 8px;
+}
+
+.btn-primary {
+  background-color: #DD700B;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #c56208;
+}
+
+.btn-secondary {
+  background-color: #ADACA7;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #999893;
 }
 
 /* Methodology Section */
@@ -224,7 +230,7 @@
   margin-top: auto;
   font-size: 14px;
   font-weight: 600;
-  color: #4f46e5;
+  color: #DD700B;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -232,7 +238,7 @@
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
-  .hero-v2 {
+  .hero {
     padding: 32px 16px;
   }
 

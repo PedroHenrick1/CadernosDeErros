@@ -9,23 +9,26 @@
           </svg>
           <div class="brand-text-stack">
             <span class="brand-title">{{ title }}</span>
-            <span class="brand-subtitle">Laboratório do Concurseiro v2</span>
+            <span class="brand-subtitle">Laboratório do Estudante</span>
           </div>
         </a>
       </div>
 
-      <div class="nav-links desktop-only">
-        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
+      <div class="nav-links nav-links-center desktop-only" *ngIf="!(authService.isLoggedIn$ | async)">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-btn btn-nav">
           Home
         </a>
-        <a routerLink="/materias" routerLinkActive="active" class="nav-link">
+      </div>
+
+      <div class="nav-links desktop-only" *ngIf="authService.isLoggedIn$ | async">
+        <a routerLink="/erros" routerLinkActive="active" class="nav-btn btn-nav">
+          Caderno de Erros
+        </a>
+        <a routerLink="/materias" routerLinkActive="active" class="nav-btn btn-nav">
           Matérias
         </a>
-        <a routerLink="/assuntos" routerLinkActive="active" class="nav-link">
+        <a routerLink="/assuntos" routerLinkActive="active" class="nav-btn btn-nav">
           Assuntos
-        </a>
-        <a routerLink="/erros" routerLinkActive="active" class="nav-link">
-          Caderno de Erros
         </a>
       </div>
 
@@ -59,36 +62,34 @@
 
     <!-- Menu Mobile Drawer -->
     <div class="mobile-drawer" *ngIf="mobileMenuAberto">
-      <a routerLink="/" (click)="fecharMobileMenu()" class="mobile-nav-link">Home</a>
-      <a routerLink="/materias" (click)="fecharMobileMenu()" class="mobile-nav-link">Matérias</a>
-      <a routerLink="/assuntos" (click)="fecharMobileMenu()" class="mobile-nav-link">Assuntos</a>
-      <a routerLink="/erros" (click)="fecharMobileMenu()" class="mobile-nav-link">Caderno de Erros</a>
+      <ng-container *ngIf="authService.isLoggedIn$ | async; else mobileAnonymous">
+        <a routerLink="/erros" (click)="fecharMobileMenu()" class="nav-btn btn-nav text-center">Caderno de Erros</a>
+        <a routerLink="/materias" (click)="fecharMobileMenu()" class="nav-btn btn-nav text-center">Matérias</a>
+        <a routerLink="/assuntos" (click)="fecharMobileMenu()" class="nav-btn btn-nav text-center">Assuntos</a>
+        <span class="user-badge mobile-user-badge" *ngIf="authService.currentUser$ | async as user">
+          👤 {{ user.nome }}
+        </span>
+        <button (click)="logout()" class="btn-logout w-full">Sair</button>
+      </ng-container>
 
-      <div class="mobile-auth-section">
-        <ng-container *ngIf="authService.isLoggedIn$ | async; else mobileAnonymous">
-          <span class="user-badge mobile-user-badge" *ngIf="authService.currentUser$ | async as user">
-            👤 {{ user.nome }}
-          </span>
-          <button (click)="logout()" class="btn-logout w-full">Sair</button>
-        </ng-container>
-        <ng-template #mobileAnonymous>
+      <ng-template #mobileAnonymous>
+        <a routerLink="/" (click)="fecharMobileMenu()" class="nav-btn btn-nav text-center">Home</a>
+        <div class="mobile-auth-section">
           <a routerLink="/login" (click)="fecharMobileMenu()" class="nav-btn btn-login w-full text-center">Entrar</a>
           <a routerLink="/register" (click)="fecharMobileMenu()" class="nav-btn btn-register w-full text-center">Cadastrar</a>
-        </ng-template>
-      </div>
+        </div>
+      </ng-template>
     </div>
   </nav>
-  
+
   <main class="main-content">
     <router-outlet></router-outlet>
   </main>
-  
+
   <footer class="footer">
     <div class="footer-content">
-      <div class="footer-brand">
-        <strong>Caderno de Erros v2</strong> — O Laboratório de Alta Precisão do Concurseiro
-      </div>
       <p class="footer-copy">© 2026 Transforme falhas passadas em aprendizado definitivo para exames de alta concorrência.</p>
+      <div class="footer-author">Feito por Pedro Henrick</div>
     </div>
   </footer>
 </div>

@@ -50,7 +50,7 @@ export class RegisterComponent {
     this.authService.register(this.registerData).subscribe({
       next: () => {
         this.loading = false;
-        this.router.navigate(['/']);
+        this.router.navigate(['/erros']);
       },
       error: (err) => {
         this.loading = false;
